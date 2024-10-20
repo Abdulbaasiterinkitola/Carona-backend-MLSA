@@ -2,9 +2,44 @@ import { Vehicle } from "../models/vehicle.js";
 import {StatusCodes} from "http-status-codes"
 import logger from "../utils/logger.js"
 import {errorResponse} from "../utils/responses.js"
-import {successResponse} from "../utils/responses.js"
+import { successResponse} from "../utils/responses.js"
 const { error } = pkg1
 import pkg1 from "winston"
+
+export const verifyVehicle = async(req, res, next) => {
+    try {
+        logger.info("START: Verify Vehicles")
+
+        const {plateNumber} = req.body
+        
+        const isVerified = () => {
+    
+        if (plateNumber) {
+            logger.info("END: Verify Vehicles")
+
+            successResponse(res, StatusCodes.OK, "vehicle verified successfully")
+
+            return true
+
+        }    
+        else {
+            logger.info("END: Verify Vehicles")
+    
+            errorResponse(res, StatusCodes.FORBIDDEN, "Cannot verify vehicle. Enter vehicle's plateNumber")
+
+            return false
+        }
+    }
+
+    isVerified()
+
+    } catch (error) {
+        logger.error(error)
+        next(error)
+    }
+
+}
+
 
 export const createVehicle = async (req, res, next) => {
     try {
@@ -35,7 +70,7 @@ export const createVehicle = async (req, res, next) => {
         }
         logger.info("END: Create Vehicles")
 
-        successResponse(res, StatusCodes.CREATED, "new vehicle created successfully")
+         return successResponse(res, StatusCodes.CREATED, "new vehicle created successfully")
     }
     catch(error){
         logger.error(error)
@@ -59,7 +94,7 @@ export const getVehicle = async (req, res, next) => {
 
     logger.info("END: Get Vehicle")
 
-    successResponse(res, StatusCodes.OK, "Vehicle fetched successfully", oneVehicle)
+     return successResponse(res, StatusCodes.OK, "Vehicle fetched successfully", oneVehicle)
 }catch(error) {
 
     if (error.name === 'CastError') {
@@ -89,7 +124,7 @@ export const getAllVehicles = async (req, res, next) => {
 
         logger.info("END: Get All Vehicles")
 
-        successResponse(res, StatusCodes.CREATED, "all vehicles fetched successfully", allVehicles)
+         return successResponse(res, StatusCodes.CREATED, "all vehicles fetched successfully", allVehicles)
     }
     catch(error){
         logger.error(error)
@@ -122,7 +157,7 @@ export const updateVehicle = async (req, res, next) => {
 
         logger.info("END: Update Vehicles")
 
-        successResponse(res, StatusCodes.CREATED, "vehicle updated successfully")
+         return successResponse(res, StatusCodes.CREATED, "vehicle updated successfully")
     }
     catch(error){
         if (error.name === 'CastError') {
@@ -153,7 +188,7 @@ export const deleteVehicle = async (req, res, next) => {
 
         logger.info("END: Delete Vehicles")
 
-        successResponse(res, StatusCodes.OK, "vehicle deleted successfully")
+         return successResponse(res, StatusCodes.OK, "vehicle deleted successfully")
     }
     catch(error){
         if (error.name === 'CastError') {

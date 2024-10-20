@@ -3,7 +3,7 @@ import { successResponse, errorResponse } from "../utils/responses.js"
 import { StatusCodes } from "http-status-codes"
 import { createAccessToken, generateHashedValue, isPasswordCorrect } from "../utils/auth.js"
 import logger from "../utils/logger.js"
-import { isVerified } from "../utils/signUpValidationFunc.js"
+import { isUserVerified } from "../utils/signUpValidationFunc.js"
 
 export const registerAccount = async (req, res, next)  => {
     try{
@@ -22,10 +22,10 @@ export const registerAccount = async (req, res, next)  => {
             lastName,
             email,
             password: generateHashedValue(password),
-            username,
+            username
         })
 
-        const isUserVerified = isVerified(req, res, newUser)
+        const verifyUser = isUserVerified(req, res, newUser)
 
         const accessToken = createAccessToken(newUser.id)
 
